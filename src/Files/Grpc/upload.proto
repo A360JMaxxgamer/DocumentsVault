@@ -3,7 +3,7 @@
 option csharp_namespace = "Files.Grpc";
 
 service UploadService {
-    rpc UploadDocuments(stream DocumentUpload) returns (DocumentUploadResult);
+    rpc UploadDocuments(stream DocumentUpload) returns (UploadDocumentsResult);
 }
 
 message DocumentUpload {
@@ -14,6 +14,10 @@ message FileUpload {
     string filename = 1;
     string filetype = 2;
     bytes data = 3;
+}
+
+message UploadDocumentsResult {
+    repeated DocumentUploadResult results = 1;
 }
 
 message DocumentUploadResult {
