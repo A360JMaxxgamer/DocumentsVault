@@ -1,7 +1,7 @@
 # Upload use case
 
 ```mermaid
-  graph LR
+  graph TB
 
   Upload
   ApiGateway
