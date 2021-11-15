@@ -13,19 +13,19 @@
   OpenSearch
   FileIndex
   DocumentIndex
+
   OpenSearch---FileIndex
   OpenSearch---DocumentIndex
-
+  
 
   Upload-->ApiGateway
-  ApiGateway-->FileService
 
-  ApiGateway---DocumentService
-  
+  ApiGateway-->DocumentService
+
+  DocumentService--Insert files-->FileService
   FileService--Create file group for uploaded document-->FileIndex 
 
-  FileService--Insert file upload-->MessageQueue
-
+  DocumentService--Insert file document for analyzation-->MessageQueue
   MessageQueue-->DocumentProcessor
 
   DocumentProcessor--Analyzes files of upload and creates a document entry -->DocumentService
