@@ -1,11 +1,9 @@
-﻿using System;
-using System.Runtime.CompilerServices;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Runtime.CompilerServices;
 using Files.Grpc;
 
-[assembly:InternalsVisibleTo("Files.Service.Tests")]
+[assembly: InternalsVisibleTo("Files.Service.Tests")]
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
+
 namespace Files.Service.Handlers
 {
     internal interface IDocumentUploadHandler
@@ -16,6 +14,7 @@ namespace Files.Service.Handlers
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<DocumentUploadResult> UploadDocumentAsync(DocumentUpload request, CancellationToken cancellationToken = default);
+        Task<DocumentUploadResult> UploadDocumentAsync(DocumentUpload request,
+            CancellationToken cancellationToken = default);
     }
 }

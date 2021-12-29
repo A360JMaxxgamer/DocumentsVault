@@ -33,7 +33,7 @@ public class ConfigurationExtensionsTest
         services.AddSingleton<IConfiguration>(config);
         services.BindConfiguration<TestConfig>("test");
         var provider = services.BuildServiceProvider();
-        
+
         // Act
         var testConfig = provider.GetRequiredService<TestConfig>();
 
