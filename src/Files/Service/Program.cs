@@ -1,7 +1,5 @@
 using Files.Service.Handlers;
 using Files.Service.Services;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 

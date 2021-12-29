@@ -1,10 +1,10 @@
 ﻿using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using Files.Grpc;
 using Files.Service.Handlers;
 using Grpc.Core;
 
-[assembly:InternalsVisibleTo("Files.Service.Tests")]
+[assembly: InternalsVisibleTo("Files.Service.Tests")]
+
 namespace Files.Service.Services
 {
     internal class UploadService : Grpc.UploadService.UploadServiceBase
@@ -15,7 +15,7 @@ namespace Files.Service.Services
         {
             _documentUploadHandler = documentUploadHandler;
         }
-        
+
         /// <inheritdoc />
         public override async Task<UploadDocumentsResult> UploadDocuments(
             IAsyncStreamReader<DocumentUpload> requestStream,
@@ -29,7 +29,7 @@ namespace Files.Service.Services
 
                 var documentUploadResult =
                     await _documentUploadHandler.UploadDocumentAsync(documentUpload, context.CancellationToken);
-                
+
                 result.Results.Add(documentUploadResult);
             }
 

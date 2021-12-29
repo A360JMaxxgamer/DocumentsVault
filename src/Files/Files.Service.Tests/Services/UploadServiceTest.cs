@@ -6,6 +6,7 @@ using Grpc.Core;
 using Moq;
 using UnitTestHelper.Mocks;
 using Xunit;
+using UploadService = Files.Service.Services.UploadService;
 
 namespace Files.Service.Tests.Services
 {
@@ -27,16 +28,15 @@ namespace Files.Service.Tests.Services
             var streamMock = new AsyncStreamReaderMock<DocumentUpload>(new DocumentUpload[]
             {
                 new(),
-                null,
-                new(),
+                new()
             });
 
-            var uploadService = new Files.Service.Services.UploadService(uploadHandlerMock.Object);
+            var uploadService = new UploadService(uploadHandlerMock.Object);
             var ctxMock = new Mock<ServerCallContext>();
-            
+
             // Act
             var result = await uploadService.UploadDocuments(streamMock, ctxMock.Object);
-            
+
             Assert.Equal(2, result.Results.Count);
         }
     }

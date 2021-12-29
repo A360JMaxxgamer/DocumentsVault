@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using Grpc.Core;
+﻿using Grpc.Core;
 
 namespace UnitTestHelper.Mocks
 {
     public class AsyncStreamReaderMock<T> : IAsyncStreamReader<T>
     {
         private readonly IEnumerator<T> _valuesEnumerator;
+
+        /// <inheritdoc />
+        public T Current => _valuesEnumerator.Current;
 
         public AsyncStreamReaderMock(IEnumerable<T> values)
         {
@@ -17,8 +17,5 @@ namespace UnitTestHelper.Mocks
         /// <inheritdoc />
         public Task<bool> MoveNext(CancellationToken cancellationToken) =>
             Task.FromResult(_valuesEnumerator.MoveNext());
-
-        /// <inheritdoc />
-        public T Current => _valuesEnumerator.Current;
     }
 }
