@@ -27,4 +27,9 @@
         <ProjectReference Include="..\AspNetCore.Utilities\AspNetCore.Utilities.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <None Remove="Resources\config.json"/>
+        <EmbeddedResource Include="Resources\config.json"/>
+    </ItemGroup>
+
 </Project>

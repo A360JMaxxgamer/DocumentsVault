@@ -27,8 +27,16 @@ namespace Files.Service.Handlers
             return documentUploadResult;
         }
 
+        private void EnsureUploadFolderExists()
+        {
+            if (!Directory.Exists(_fileServiceConfiguration.Folder))
+                Directory.CreateDirectory(_fileServiceConfiguration.Folder);
+        }
+
         private async Task<FileUploadResult> UploadFileAsync(FileUpload fileUpload, CancellationToken cancellationToken)
         {
+            EnsureUploadFolderExists();
+
             var fileId = Guid.NewGuid();
             var fileName = Path.Combine(_fileServiceConfiguration.Folder, $"{fileId.ToString()}.{fileUpload.Filetype}");
             await File.WriteAllBytesAsync(fileName, fileUpload.Data.ToByteArray(), cancellationToken);

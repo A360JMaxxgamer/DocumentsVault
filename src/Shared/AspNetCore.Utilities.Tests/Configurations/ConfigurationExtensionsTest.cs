@@ -1,4 +1,4 @@
-﻿using System.IO;
+﻿using System.Reflection;
 using AspNetCore.Utilities.Configurations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,22 +12,11 @@ public class ConfigurationExtensionsTest
     public void ShouldBindConfig()
     {
         // Arrange
-        const string json = @"
-{
-  ""test"": {
-    ""id"": 2,
-    ""name"": ""test""
-  }  
-}
-";
-        using var memStream = new MemoryStream();
-        using var streamWriter = new StreamWriter(memStream);
-        streamWriter.Write(json);
-        streamWriter.Flush();
-
-        memStream.Seek(0, 0);
+        using var jsonStream = Assembly
+            .GetExecutingAssembly()
+            .GetManifestResourceStream("AspNetCore.Utilities.Tests.Resources.config.json");
         var config = new ConfigurationBuilder()
-            .AddJsonStream(memStream)
+            .AddJsonStream(jsonStream)
             .Build();
         var services = new ServiceCollection();
         services.AddSingleton<IConfiguration>(config);
