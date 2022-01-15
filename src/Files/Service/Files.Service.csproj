@@ -4,15 +4,17 @@
         <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Grpc.AspNetCore" Version="2.40.0"/>
+        <PackageReference Include="Dapr.AspNetCore" Version="1.5.0" />
+        <PackageReference Include="Grpc.AspNetCore" Version="2.40.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\Shared\AspNetCore.Utilities\AspNetCore.Utilities.csproj"/>
-        <ProjectReference Include="..\Grpc\Files.Grpc.csproj"/>
+        <ProjectReference Include="..\..\Shared\AspNetCore.Utilities\AspNetCore.Utilities.csproj" />
+        <ProjectReference Include="..\Grpc\Files.Grpc.csproj" />
     </ItemGroup>
 
 </Project>

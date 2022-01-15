@@ -7,6 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddGrpc();
+builder.Services.AddDaprClient();
+builder.Services.AddTransient<IUploadPublisher, DaprUploadPublisher>();
 builder.Services.AddTransient<IDocumentUploadHandler, DocumentUploadHandler>();
 builder.Services.BindConfiguration<FileServiceConfiguration>("FileService");
 

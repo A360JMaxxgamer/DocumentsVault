@@ -25,13 +25,16 @@ namespace Files.Service.Tests.Services
                     result.UploadedFilesResult.Add(new FileUploadResult());
                     return Task.FromResult(result);
                 });
+
+            var uploadIndexerMock = new Mock<IUploadIndexer>();
+            var uploadPublisherMock = new Mock<IUploadPublisher>();
             var streamMock = new AsyncStreamReaderMock<DocumentUpload>(new DocumentUpload[]
             {
                 new(),
                 new()
             });
 
-            var uploadService = new UploadService(uploadHandlerMock.Object);
+            var uploadService = new UploadService(uploadHandlerMock.Object, uploadIndexerMock.Object, uploadPublisherMock.Object);
             var ctxMock = new Mock<ServerCallContext>();
 
             // Act

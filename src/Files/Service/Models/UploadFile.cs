@@ -1,6 +1,6 @@
 ﻿namespace Files.Service.Models
 {
-    public record File
+    public record UploadFile
     {
         /// <summary>
         /// The identifier of the file
