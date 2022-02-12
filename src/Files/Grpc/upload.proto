@@ -21,10 +21,10 @@ message UploadDocumentsResult {
 }
 
 message DocumentUploadResult {
-    repeated FileUploadResult uploadedFilesResult = 1;
+    repeated FileUploadResult uploaded_files_result = 1;
 }
 
 message FileUploadResult {
-    string fileName = 1;
-    string fileId = 2;
+    string file_name = 1;
+    string file_id = 2;
 }
