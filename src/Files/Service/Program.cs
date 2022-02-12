@@ -9,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddGrpc();
 builder.Services.AddTransient<IDocumentUploadHandler, DocumentUploadHandler>();
+builder.Services.AddTransient<IUploadIndexer, MongoIndexer>();
+builder.Services.AddTransient<IUploadPublisher, MessageQueuePublisher>();
 builder.Services.BindConfiguration<FileServiceConfiguration>("FileService");
 builder.Services.AddTransient<IMongoClient>(provider =>
 {

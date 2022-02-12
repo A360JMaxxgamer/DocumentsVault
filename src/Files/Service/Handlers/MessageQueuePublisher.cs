@@ -17,19 +17,21 @@ internal class MessageQueuePublisher : IUploadPublisher
     }
     
     /// <inheritdoc />
-    public async Task PublishUploadAsync(UploadFile uploadedFile, CancellationToken cancellationToken = default)
+    public Task PublishUploadAsync(UploadFile uploadedFile, CancellationToken cancellationToken = default)
     {
         var producerConfig = new ProducerConfig
         {
             BootstrapServers = _fileServiceConfiguration.BootstrapServers,
-            ClientId = Dns.GetHostName()
+            ClientId = Dns.GetHostName(),
         };
 
-        using var producer = new ProducerBuilder<Null, UploadFile>(producerConfig).Build();
+        using var producer = new ProducerBuilder<Null, string>(producerConfig)
+            .Build();
 
-        await producer.ProduceAsync("fileUploaded", new Message<Null, UploadFile>
+        producer.Produce("fileUploaded", new Message<Null, string>
         {
-            Value = uploadedFile
-        }, cancellationToken);
+            Value = uploadedFile.Id.ToString()
+        });
+        return Task.CompletedTask;
     }
 }
