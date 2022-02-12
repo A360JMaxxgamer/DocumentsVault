@@ -1,0 +1,30 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "Files.Grpc";
+
+service UploadService {
+    rpc UploadDocuments(stream DocumentUpload) returns (UploadDocumentsResult);
+}
+
+message DocumentUpload {
+    repeated FileUpload files = 1;
+}
+
+message FileUpload {
+    string filename = 1;
+    string filetype = 2;
+    bytes data = 3;
+}
+
+message UploadDocumentsResult {
+    repeated DocumentUploadResult results = 1;
+}
+
+message DocumentUploadResult {
+    repeated FileUploadResult uploaded_files_result = 1;
+}
+
+message FileUploadResult {
+    string file_name = 1;
+    string file_id = 2;
+}

@@ -1,0 +1,4 @@
+﻿extend type Query {
+    uploadFileById: UploadFile! @delegate(path: "uploadFileById(id: $id)")
+    uploadFiles: [UploadFile!]! @delegate(path: "uploadFiles")
+}

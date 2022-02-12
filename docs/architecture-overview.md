@@ -13,19 +13,19 @@
   OpenSearch
   FileIndex
   DocumentIndex
+
   OpenSearch---FileIndex
   OpenSearch---DocumentIndex
-
+  
 
   Upload-->ApiGateway
-  ApiGateway-->FileService
 
-  ApiGateway---DocumentService
-  
+  ApiGateway-->DocumentService
+
+  DocumentService--Insert files-->FileService
   FileService--Create file group for uploaded document-->FileIndex 
 
-  FileService--Insert file upload-->MessageQueue
-
+  DocumentService--Insert file document for analyzation-->MessageQueue
   MessageQueue-->DocumentProcessor
 
   DocumentProcessor--Analyzes files of upload and creates a document entry -->DocumentService
@@ -59,13 +59,15 @@ message DocumentUploadResult {
 
 ````
 
-Each document upload receives each FileUpload. The files are either saved as base64 or on some file storage. Eitherway each file gets an entry in the index. The file service generates their ids.
+Each document upload receives each FileUpload. The files are either saved as base64 or on some file storage. Eitherway
+each file gets an entry in the index. The file service generates their ids.
 
 The file service creates a new entry in the MessageQueue which contains all file ids of a document.
 
 ## DocumentProcessor
 
-The DocumentProcessor receives its work from the MessageQueue. It streams all files of a new document, analyzes them and creates a document of it. The document is stored via the DocumentService in the index.
+The DocumentProcessor receives its work from the MessageQueue. It streams all files of a new document, analyzes them and
+creates a document of it. The document is stored via the DocumentService in the index.
 
 ## DocumentService
 

@@ -23,20 +23,21 @@ jobs:
         dotnet-version: 6.0.x
     - name: Restore dependencies
       run: dotnet restore
-      working-directory: src
-    - name: Sonarqube Begin
-      run: | 
-        dotnet tool install --global dotnet-sonarscanner
-        dotnet sonarscanner begin /o:a360jmaxxgamer /k:A360JMaxxgamer_DocumentsVault /d:sonar.login=${{ secrets.SONAR_TOKEN }} /s:$GITHUB_WORKSPACE/SonarQube.Analysis.xml
-    - name: Build
-      run: dotnet build --no-restore
-      working-directory: src
-    - name: Test with the dotnet CLI
-      run: dotnet test --settings coverlet.runsettings --logger:trx
-      working-directory: src
+    - name: SonarScanner for .NET 6 with pull request decoration support
+      uses: highbyte/sonarscan-dotnet@v2.1.2
+      with:
+        # The key of the SonarQube project
+        sonarProjectKey: A360JMaxxgamer_DocumentsVault
+        # The name of the SonarQube project
+        sonarProjectName:  DocumentsVault
+        # The name of the SonarQube organization in SonarCloud. For hosted SonarQube, skip this setting.
+        sonarOrganization: a360jmaxxgamer
+        # Optional command arguments to dotnet test
+        dotnetTestArguments: --logger trx --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+        # Optional extra command arguments the the SonarScanner 'begin' command
+        sonarBeginArguments: /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.opencover.xml" -d:sonar.cs.vstest.reportsPaths="**/TestResults/*.trx"
+
       env:
-        ASPNETCORE_ENVIRONMENT: Development
-    - name: Sonarqube end
-      run: dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
-      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

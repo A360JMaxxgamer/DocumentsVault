@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <SonarQubeExlcude>true</SonarQubeExlcude>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Grpc.Core.Api" Version="2.41.1"/>
+        <PackageReference Include="Moq" Version="4.16.1"/>
+    </ItemGroup>
+
+</Project>
