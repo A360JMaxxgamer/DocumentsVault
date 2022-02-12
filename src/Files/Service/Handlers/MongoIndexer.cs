@@ -9,7 +9,7 @@ public class MongoIndexer : IUploadIndexer
 
     public MongoIndexer(IMongoCollection<UploadFile> mongoCollection)
     {
-        _mongoCollection = mongoCollection ?? throw new ArgumentNullException(nameof(mongoCollection));
+        _mongoCollection = mongoCollection;
     }
 
     /// <inheritdoc />

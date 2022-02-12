@@ -2,6 +2,6 @@
 
 internal static class ServiceConstants
 {
-    public static string FileIndexDb = "FileIndex";
-    public static string FileCollection = "FileDocuments";
+    public static readonly string FileIndexDb = "FileIndex";
+    public static readonly string FileCollection = "FileDocuments";
 }

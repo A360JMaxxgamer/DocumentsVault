@@ -13,7 +13,7 @@ using Xunit;
 
 namespace Files.Service.Tests.Handlers;
 
-public class DocumentUploadHandlerTest : IDisposable
+public sealed class DocumentUploadHandlerTest : IDisposable
 {
     private readonly string _tmpConfigFile;
     private readonly string _tmpPath;
