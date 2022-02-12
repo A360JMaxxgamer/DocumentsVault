@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Files.Grpc", "Files\Grpc\Fi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Files.Service", "Files\Service\Files.Service.csproj", "{1399698F-87FC-4498-BF65-EFE12CB878CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Files.Service.Tests", "Files\Files.Service.Tests\Files.Service.Tests.csproj", "{7668D4F8-B935-472A-98AE-A94101E380F0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Files.Service.Tests", "Files\Service.Tests\Files.Service.Tests.csproj", "{7668D4F8-B935-472A-98AE-A94101E380F0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{74D1B803-26ED-477A-89D9-A1A5BF98C1AB}"
 EndProject

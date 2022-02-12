@@ -16,7 +16,7 @@ builder.Services.AddTransient<IDocumentUploadHandler, DocumentUploadHandler>();
 builder.Services.AddTransient<IUploadIndexer, MongoIndexer>();
 builder.Services.AddTransient<IUploadPublisher, MessageQueuePublisher>();
 builder.Services.BindConfiguration<FileServiceConfiguration>("FileService");
-builder.Services.AddTransient<IMongoCollection<UploadFile>>(provider =>
+builder.Services.AddSingleton<IMongoCollection<UploadFile>>(provider =>
 {
     var fileServiceConfig = provider.GetRequiredService<FileServiceConfiguration>();
     return new MongoClient(fileServiceConfig.MongoConnectionString)
@@ -26,9 +26,11 @@ builder.Services.AddTransient<IMongoCollection<UploadFile>>(provider =>
 builder.Services
     .AddSingleton(ConnectionMultiplexer.Connect("localhost:7000"))
     .AddGraphQLServer()
-    .AddProjections()
     .AddQueryType<Query>()
-    .AddFiltering()
+    .AddMongoDbProjections()
+    .AddMongoDbFiltering()
+    .AddMongoDbSorting()
+    .AddMongoDbPagingProviders()
     .AddSorting()
     .InitializeOnStartup()
     .PublishSchemaDefinition(c => c
