@@ -22,7 +22,8 @@
 
 ## Document
 
-A Document represents a list of files. For example a letter can be scanned into two images. This letter is a Document and its content is the merged content of both images.
+A Document represents a list of files. For example a letter can be scanned into two images. This letter is a Document
+and its content is the merged content of both images.
 
 ## File
 

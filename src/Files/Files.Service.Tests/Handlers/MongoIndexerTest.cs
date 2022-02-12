@@ -4,7 +4,6 @@ using Files.Service.Handlers;
 using Files.Service.Models;
 using MongoDB.Driver;
 using Moq;
-using UnitTestHelper.Extensions;
 using Xunit;
 
 namespace Files.Service.Tests.Handlers;
@@ -14,13 +13,8 @@ public class MongoIndexerTest
     [Fact]
     public async Task Should_InsertAsync_Returns_Result()
     {
-        var mongoClientMock = new Mock<IMongoClient>();
-        mongoClientMock
-            .SetupReturnMock(client => client.GetDatabase(It.IsAny<string>(), It.IsAny<MongoDatabaseSettings>()))
-            .SetupReturnMock(db =>
-                db.GetCollection<UploadFile>(It.IsAny<string>(), It.IsAny<MongoCollectionSettings>()));
-            
-        var mongoIndexer = new MongoIndexer(mongoClientMock.Object);
+        var mongoCollection = new Mock<IMongoCollection<UploadFile>>();
+        var mongoIndexer = new MongoIndexer(mongoCollection.Object);
         const string originalFileName = "original";
         const string fileName = "orig";
 

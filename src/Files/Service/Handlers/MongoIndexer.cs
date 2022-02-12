@@ -1,22 +1,21 @@
 ﻿using Files.Service.Models;
-using Files.Service.Shared;
 using MongoDB.Driver;
 
 namespace Files.Service.Handlers;
 
 public class MongoIndexer : IUploadIndexer
 {
-    private readonly IMongoClient _mongoClient;
+    private readonly IMongoCollection<UploadFile> _mongoCollection;
 
-    public MongoIndexer(IMongoClient mongoClient)
+    public MongoIndexer(IMongoCollection<UploadFile> mongoCollection)
     {
-        _mongoClient = mongoClient ?? throw new ArgumentNullException(nameof(mongoClient));
+        _mongoCollection = mongoCollection ?? throw new ArgumentNullException(nameof(mongoCollection));
     }
-    
+
     /// <inheritdoc />
     public async Task<UploadFile> InsertAsync(
-        Guid id, 
-        string fileName, 
+        Guid id,
+        string fileName,
         string originalFileName,
         CancellationToken cancellationToken = default)
     {
@@ -27,10 +26,7 @@ public class MongoIndexer : IUploadIndexer
             OriginalFileName = originalFileName,
             UploadDate = DateTime.UtcNow
         };
-        var fileIndexDb = _mongoClient.GetDatabase(ServiceConstants.FileIndexDb);
-
-        var mongoCollection = fileIndexDb.GetCollection<UploadFile>(ServiceConstants.FileCollection);
-        await mongoCollection.InsertOneAsync(uploadFile, cancellationToken: cancellationToken);
+        await _mongoCollection.InsertOneAsync(uploadFile, cancellationToken: cancellationToken);
         return uploadFile;
     }
 }

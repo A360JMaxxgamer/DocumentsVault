@@ -15,14 +15,14 @@ internal class MessageQueuePublisher : IUploadPublisher
     {
         _fileServiceConfiguration = fileServiceConfiguration;
     }
-    
+
     /// <inheritdoc />
     public Task PublishUploadAsync(UploadFile uploadedFile, CancellationToken cancellationToken = default)
     {
         var producerConfig = new ProducerConfig
         {
             BootstrapServers = _fileServiceConfiguration.BootstrapServers,
-            ClientId = Dns.GetHostName(),
+            ClientId = Dns.GetHostName()
         };
 
         using var producer = new ProducerBuilder<Null, string>(producerConfig)

@@ -39,7 +39,8 @@ namespace Files.Service.Tests.Services
                 new()
             });
 
-            var uploadService = new UploadService(uploadHandlerMock.Object, uploadIndexerMock.Object, uploadPublisherMock.Object);
+            var uploadService = new UploadService(uploadHandlerMock.Object, uploadIndexerMock.Object,
+                uploadPublisherMock.Object);
             var ctxMock = new Mock<ServerCallContext>();
 
             // Act

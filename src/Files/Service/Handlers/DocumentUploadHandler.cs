@@ -1,5 +1,6 @@
 ﻿using Files.Grpc;
 using Files.Service.Configurations;
+using Path = System.IO.Path;
 
 namespace Files.Service.Handlers
 {
@@ -40,7 +41,7 @@ namespace Files.Service.Handlers
             var fileId = Guid.NewGuid();
             var fileName = Path.Combine(_fileServiceConfiguration.Folder, $"{fileId.ToString()}.{fileUpload.Filetype}");
             await File.WriteAllBytesAsync(fileName, fileUpload.Data.ToByteArray(), cancellationToken);
-            
+
             return new FileUploadResult
             {
                 FileId = fileId.ToString(),

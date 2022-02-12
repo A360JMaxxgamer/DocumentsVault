@@ -14,7 +14,7 @@ namespace Files.Service.Services
         private readonly IUploadPublisher _uploadPublisher;
 
         public UploadService(
-            IDocumentUploadHandler documentUploadHandler, 
+            IDocumentUploadHandler documentUploadHandler,
             IUploadIndexer uploadIndexer,
             IUploadPublisher uploadPublisher)
         {
@@ -39,12 +39,13 @@ namespace Files.Service.Services
 
                 result.Results.Add(documentUploadResult);
             }
-            
+
             foreach (var fileUploadResult in result.Results.SelectMany(r => r.UploadedFilesResult).ToList())
             {
                 var fileId = Guid.Parse(fileUploadResult.FileId);
                 var fileName = fileUploadResult.FileName;
-                var uploadedFile = await _uploadIndexer.InsertAsync(fileId, fileName, fileName, context.CancellationToken);
+                var uploadedFile =
+                    await _uploadIndexer.InsertAsync(fileId, fileName, fileName, context.CancellationToken);
                 await _uploadPublisher.PublishUploadAsync(uploadedFile, context.CancellationToken);
             }
 
