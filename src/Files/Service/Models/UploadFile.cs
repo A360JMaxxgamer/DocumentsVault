@@ -1,10 +1,13 @@
-﻿namespace Files.Service.Models
+﻿using MongoDB.Bson.Serialization.Attributes;
+
+namespace Files.Service.Models
 {
     public record UploadFile
     {
         /// <summary>
         /// The identifier of the file
         /// </summary>
+        [BsonId]
         public Guid Id { get; set; }
 
         /// <summary>

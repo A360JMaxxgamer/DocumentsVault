@@ -38,7 +38,6 @@ namespace Files.Service.Services
                     await _documentUploadHandler.UploadDocumentAsync(documentUpload, context.CancellationToken);
 
                 result.Results.Add(documentUploadResult);
-
             }
             
             foreach (var fileUploadResult in result.Results.SelectMany(r => r.UploadedFilesResult).ToList())

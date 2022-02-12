@@ -27,7 +27,6 @@ internal class MessageQueuePublisher : IUploadPublisher
 
         await producer.ProduceAsync("fileUploaded", new Message<Null, UploadFile>
         {
-
             Value = uploadedFile
         }, cancellationToken);
     }

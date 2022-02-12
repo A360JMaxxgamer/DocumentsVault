@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Files.Grpc;
 using Files.Service.Handlers;
@@ -22,7 +23,11 @@ namespace Files.Service.Tests.Services
                 .Returns(() =>
                 {
                     var result = new DocumentUploadResult();
-                    result.UploadedFilesResult.Add(new FileUploadResult());
+                    result.UploadedFilesResult.Add(new FileUploadResult
+                    {
+                        FileId = Guid.NewGuid().ToString(),
+                        FileName = string.Empty
+                    });
                     return Task.FromResult(result);
                 });
 
