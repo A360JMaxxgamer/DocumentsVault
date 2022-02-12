@@ -1,10 +1,12 @@
-﻿using System.Net;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Net;
 using Confluent.Kafka;
 using Files.Service.Configurations;
 using Files.Service.Models;
 
 namespace Files.Service.Handlers;
 
+[ExcludeFromCodeCoverage]
 internal class MessageQueuePublisher : IUploadPublisher
 {
     private readonly FileServiceConfiguration _fileServiceConfiguration;
