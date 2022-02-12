@@ -28,7 +28,11 @@ public class MongoIndexerTest
         var result = await mongoIndexer.InsertAsync(Guid.NewGuid(), fileName, originalFileName);
 
         // Assert
+        Assert.NotEqual(Guid.Empty, result.Id);
         Assert.Equal(fileName, result.FileName);
         Assert.Equal(originalFileName, result.OriginalFileName);
+
+        var defaultDateTime = default(DateTime);
+        Assert.NotEqual(defaultDateTime, result.UploadDate);
     }
 }
