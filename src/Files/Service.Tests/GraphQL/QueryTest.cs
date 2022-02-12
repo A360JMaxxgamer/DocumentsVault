@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Files.Service.GraphQL;
 using Files.Service.Models;
 using MongoDB.Driver;
@@ -23,7 +22,7 @@ public class QueryTest
         // Assert
         Assert.NotNull(result);
     }
-    
+
     [Fact]
     public void GetUploadFilesByIdShould_Return_Executable()
     {
