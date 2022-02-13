@@ -24,6 +24,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker-compose", "src\docke
 		docker-compose.dev.yml = docker-compose.dev.yml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{05A30AA7-7319-42F6-BDCE-BF2E388CFC6E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Documents.Service", "Documents.Service\Documents.Service.csproj", "{B80D8C3D-9F37-4356-8FD0-ED1713E3A001}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +61,10 @@ Global
 		{3D6C3570-814D-4295-A310-5A6AEEBC0FB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3D6C3570-814D-4295-A310-5A6AEEBC0FB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3D6C3570-814D-4295-A310-5A6AEEBC0FB4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B80D8C3D-9F37-4356-8FD0-ED1713E3A001}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B80D8C3D-9F37-4356-8FD0-ED1713E3A001}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B80D8C3D-9F37-4356-8FD0-ED1713E3A001}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B80D8C3D-9F37-4356-8FD0-ED1713E3A001}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{C1B62E3C-BBD8-448D-8C9B-29A436259123} = {B3D87EDA-2933-4C31-B4A5-9D2568CC638C}
@@ -65,5 +73,6 @@ Global
 		{E796B558-CB54-42E6-8E00-BC48FBC0AE31} = {74D1B803-26ED-477A-89D9-A1A5BF98C1AB}
 		{1890ED01-59C0-41BE-B992-00363C26964E} = {74D1B803-26ED-477A-89D9-A1A5BF98C1AB}
 		{3D6C3570-814D-4295-A310-5A6AEEBC0FB4} = {74D1B803-26ED-477A-89D9-A1A5BF98C1AB}
+		{B80D8C3D-9F37-4356-8FD0-ED1713E3A001} = {05A30AA7-7319-42F6-BDCE-BF2E388CFC6E}
 	EndGlobalSection
 EndGlobal
