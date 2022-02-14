@@ -1,6 +1,9 @@
-﻿namespace Documents.Service.Configurations;
+﻿using System.Diagnostics.CodeAnalysis;
 
-public class DocumentServiceConfiguration
+namespace Documents.Service.Configurations;
+
+[ExcludeFromCodeCoverage]
+public record DocumentServiceConfiguration
 {
-    
+    public string MongoConnectionString { get; set; } = string.Empty;
 }

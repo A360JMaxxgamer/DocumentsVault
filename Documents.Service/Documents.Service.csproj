@@ -15,4 +15,8 @@
         <PackageReference Include="HotChocolate.Stitching.Redis" Version="12.6.0" />
         <PackageReference Include="MongoDB.Driver.GridFS" Version="2.14.1" />
     </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\src\Shared\AspNetCore.Utilities\AspNetCore.Utilities.csproj" />
+    </ItemGroup>
 </Project>
