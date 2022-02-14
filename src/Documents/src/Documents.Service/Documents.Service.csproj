@@ -17,6 +17,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\src\Shared\AspNetCore.Utilities\AspNetCore.Utilities.csproj" />
+      <ProjectReference Include="..\..\..\Shared\src\AspNetCore.Utilities\AspNetCore.Utilities.csproj" />
     </ItemGroup>
 </Project>
