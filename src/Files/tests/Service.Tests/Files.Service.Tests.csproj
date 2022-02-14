@@ -22,8 +22,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Documents.Service\Documents.Service.csproj" />
-      <ProjectReference Include="..\src\Shared\UnitTestHelper\UnitTestHelper.csproj" />
+      <ProjectReference Include="..\..\..\Shared\src\AspNetCore.Utilities\AspNetCore.Utilities.csproj" />
+      <ProjectReference Include="..\..\..\Shared\src\UnitTestHelper\UnitTestHelper.csproj" />
+      <ProjectReference Include="..\..\src\Grpc\Files.Grpc.csproj" />
+      <ProjectReference Include="..\..\src\Service\Files.Service.csproj" />
     </ItemGroup>
 
 </Project>
