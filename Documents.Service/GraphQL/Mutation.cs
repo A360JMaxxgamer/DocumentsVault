@@ -1,16 +1,42 @@
-﻿using Documents.Service.Models;
+﻿using Documents.Service.GraphQL.Exceptions;
+using Documents.Service.Models;
+using MongoDB.Driver;
 
 namespace Documents.Service.GraphQL;
 
 public class Mutation
 {
     /// <summary>
-    /// Create a new document
+    /// Adds a new document
     /// </summary>
+    /// <param name="collection"></param>
     /// <param name="fileIds">A list of all associated files</param>
     /// <param name="metadata">Metadata of document</param>
     /// <returns>Created document</returns>
-    public Document AddDocument(List<Guid> fileIds, Metadata metadata) => throw new NotImplementedException();
+    [Error(typeof(FileIdsExistOnDocumentException))]
+    public Document AddDocument([Service] IMongoCollection<Document> collection, List<Guid> fileIds, Metadata metadata)
+    {
+        var existingDocument = collection
+            .Find(doc => doc.FileIds.Any(fileIds.Contains))
+            .FirstOrDefault();
+
+        if (existingDocument is not null)
+        {
+            throw new FileIdsExistOnDocumentException(existingDocument.Id);
+        }
+        
+        var creationDate = DateTime.UtcNow;
+        var document = new Document
+        {
+            Id = Guid.NewGuid(),
+            Metadata = metadata,
+            CreationDate = creationDate,
+            ModificationDate = creationDate,
+            FileIds = fileIds
+        };
+
+        return document;
+    }
     
     /// <summary>
     /// Deletes a document by its id
