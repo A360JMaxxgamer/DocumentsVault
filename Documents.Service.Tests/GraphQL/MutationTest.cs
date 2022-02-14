@@ -150,4 +150,68 @@ public class MutationTest
         // Assert
         Assert.Null(exception);
     }
+    
+    [Fact]
+    public void AddTags_Should_Update_Tags_Without_Duplicates()
+    {
+        // Arrange
+        var docId = Guid.NewGuid();
+        var mutation = new Mutation();
+        var collectionMock = new Mock<IMongoCollection<Document>>();
+        collectionMock
+            .SetupReturnMock(collection => collection
+                .FindSync(
+                    It.IsAny<FilterDefinition<Document>>(),
+                    It.IsAny<FindOptions<Document>>(),
+                    It.IsAny<CancellationToken>()))
+            .SetupReturn(cursor => cursor.MoveNext(It.IsAny<CancellationToken>()), true)
+            .SetupReturn(cursor => cursor.Current, new Document[]
+            {
+                new()
+                {
+                    Id = docId,
+                    Metadata = new Metadata
+                    {
+                        Tags = new List<string>
+                        {
+                            "TagOne",
+                            "TagThree"
+                        }
+                    }
+                }
+            });
+        
+        // Act 
+        var document = mutation.AddTags(collectionMock.Object, docId, new[]
+        {
+            "TagOne",
+            "TagTwo",
+        });
+
+        // Assert
+        Assert.Equal(3, document.Metadata.Tags.Count);
+    }
+    
+    [Fact]
+    public void AddTags_Should_Throw_DocumentNotFoundException_On_Document_Not_Found()
+    {
+        // Arrange
+        var mutation = new Mutation();
+        var collectionMock = new Mock<IMongoCollection<Document>>();
+        collectionMock
+            .SetupReturnMock(collection => collection
+                .FindSync(
+                    It.IsAny<FilterDefinition<Document>>(),
+                    It.IsAny<FindOptions<Document>>(),
+                    It.IsAny<CancellationToken>()))
+            .SetupReturn(cursor => cursor.MoveNext(It.IsAny<CancellationToken>()), true);
+        
+        // Act 
+        var exception = Record.Exception(() => mutation.AddTags(collectionMock.Object, Guid.NewGuid(), Array.Empty<string>()));
+
+        // Assert
+        Assert.NotNull(exception);
+        Assert.IsType<DocumentNotFoundException>(exception);
+    }
+
 }
