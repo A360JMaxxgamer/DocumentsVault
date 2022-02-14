@@ -79,15 +79,25 @@ public class Mutation
         document.Metadata.Tags.AddRange(newTags);
         return SaveDocument(collection, document);
     }
-    
+
     /// <summary>
     /// Deletes <paramref name="tags"/> off the document with the <paramref name="documentId"/>
     /// </summary>
+    /// <param name="collection"></param>
     /// <param name="documentId">Id of the document</param>
     /// <param name="tags">Tags to delete</param>
     /// <returns>Updated document</returns>
     [Error(typeof(DocumentNotFoundException))]
-    public Document DeleteTags(Guid documentId, string[] tags) => throw new NotImplementedException();
+    public Document DeleteTags([Service] IMongoCollection<Document> collection, Guid documentId, string[] tags)
+    {
+        var document = FindDocument(collection, documentId);
+        var newTagList = document.Metadata.Tags
+            .Where(tag => !tags.Contains(tag))
+            .ToArray();
+        document.Metadata.Tags.Clear();
+        document.Metadata.Tags.AddRange(newTagList);
+        return SaveDocument(collection, document);
+    }
 
     /// <summary>
     /// Updates the title of the document

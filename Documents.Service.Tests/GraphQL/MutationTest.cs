@@ -214,4 +214,45 @@ public class MutationTest
         Assert.IsType<DocumentNotFoundException>(exception);
     }
 
+    [Fact]
+    public void DeleteTags_Should_Remove_Tags()
+    {
+        // Arrange
+        var docId = Guid.NewGuid();
+        var mutation = new Mutation();
+        var collectionMock = new Mock<IMongoCollection<Document>>();
+        collectionMock
+            .SetupReturnMock(collection => collection
+                .FindSync(
+                    It.IsAny<FilterDefinition<Document>>(),
+                    It.IsAny<FindOptions<Document>>(),
+                    It.IsAny<CancellationToken>()))
+            .SetupReturn(cursor => cursor.MoveNext(It.IsAny<CancellationToken>()), true)
+            .SetupReturn(cursor => cursor.Current, new Document[]
+            {
+                new()
+                {
+                    Id = docId,
+                    Metadata = new Metadata
+                    {
+                        Tags = new List<string>
+                        {
+                            "TagOne",
+                            "TagTwo",
+                            "TagThree"
+                        }
+                    }
+                }
+            });
+        
+        // Act 
+        var document = mutation.DeleteTags(collectionMock.Object, docId, new[]
+        {
+            "TagOne",
+            "TagTwo"
+        });
+
+        // Assert
+        Assert.Single(document.Metadata.Tags);
+    }
 }
