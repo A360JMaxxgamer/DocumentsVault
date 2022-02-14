@@ -26,7 +26,7 @@ public static class Program
         });
 
         builder.Services
-            .AddSingleton(ConnectionMultiplexer.Connect("localhost:7000"))
+            .AddSingleton(provider => ConnectionMultiplexer.Connect(provider.GetRequiredService<IConfiguration>().GetValue<string>("redis")))
             .AddGraphQLServer()
             .AddMutationConventions()
             .AddQueryType<Query>()
@@ -39,8 +39,6 @@ public static class Program
             .InitializeOnStartup()
             .PublishSchemaDefinition(c => c
                 .SetName("documents")
-                .IgnoreRootTypes()
-                .AddTypeExtensionsFromFile("./GraphQL/Stitching.graphql")
                 .PublishToRedis("documentsVault", sp => sp.GetRequiredService<ConnectionMultiplexer>()));
 
         var app = builder.Build();

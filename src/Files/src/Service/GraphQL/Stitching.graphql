@@ -1,4 +1,3 @@
-﻿extend type Query {
-    uploadFileById: UploadFile! @delegate(path: "uploadFileById(id: $id)")
-    uploadFiles: [UploadFile!]! @delegate(path: "uploadFiles")
+﻿extend type Document {
+    files: [UploadFile!] @delegate(path: "uploadFiles(where: {id: {in: $fields:fileIds}).nodes")
 }

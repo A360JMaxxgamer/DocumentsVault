@@ -1,4 +1,1 @@
-﻿extend type Query {
-    documentById: Document! @delegate(path: "documentById(id: $id)")
-    documents: [Document!]! @delegate(path: "documents")
-}
+﻿
