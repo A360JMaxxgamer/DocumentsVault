@@ -102,11 +102,17 @@ public class Mutation
     /// <summary>
     /// Updates the title of the document
     /// </summary>
+    /// <param name="collection"></param>
     /// <param name="documentId">Id of the document</param>
     /// <param name="title">New title</param>
     /// <returns>Updated document</returns>
     [Error(typeof(DocumentNotFoundException))]
-    public Document UpdateDocumentTitle(Guid documentId, string title) => throw new NotImplementedException();
+    public Document UpdateDocumentTitle([Service] IMongoCollection<Document> collection, Guid documentId, string title)
+    {
+        var document = FindDocument(collection, documentId);
+        document.Metadata.Title = title;
+        return SaveDocument(collection, document);
+    }
 
     /// <summary>
     /// Updates the text of the document
