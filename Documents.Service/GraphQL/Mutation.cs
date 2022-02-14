@@ -117,11 +117,17 @@ public class Mutation
     /// <summary>
     /// Updates the text of the document
     /// </summary>
+    /// <param name="collection"></param>
     /// <param name="documentId">Id of the document</param>
     /// <param name="text">New text</param>
     /// <returns>Updated document</returns>
     [Error(typeof(DocumentNotFoundException))]
-    public Document UpdateDocumentText(Guid documentId, string text) => throw new NotImplementedException();
+    public Document UpdateDocumentText([Service] IMongoCollection<Document> collection, Guid documentId, string text)
+    {
+        var document = FindDocument(collection, documentId);
+        document.Metadata.Text = text;
+        return SaveDocument(collection, document);
+    }
 
     private Document FindDocument(IMongoCollection<Document> collection, Guid documentId)
     {

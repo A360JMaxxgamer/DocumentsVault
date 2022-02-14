@@ -289,4 +289,38 @@ public class MutationTest
         // Assert
         Assert.Equal(title, document.Metadata.Title);
     }
+    
+    [Fact]
+    public void UpdateDocumentText_Should_Update_Text()
+    {
+        // Arrange
+        var docId = Guid.NewGuid();
+        var mutation = new Mutation();
+        var collectionMock = new Mock<IMongoCollection<Document>>();
+        collectionMock
+            .SetupReturnMock(collection => collection
+                .FindSync(
+                    It.IsAny<FilterDefinition<Document>>(),
+                    It.IsAny<FindOptions<Document>>(),
+                    It.IsAny<CancellationToken>()))
+            .SetupReturn(cursor => cursor.MoveNext(It.IsAny<CancellationToken>()), true)
+            .SetupReturn(cursor => cursor.Current, new Document[]
+            {
+                new()
+                {
+                    Id = docId,
+                    Metadata = new Metadata
+                    {
+                        Text = "Old"
+                    }
+                }
+            });
+        const string text = "NewTitle";
+        
+        // Act 
+        var document = mutation.UpdateDocumentText(collectionMock.Object, docId, text);
+
+        // Assert
+        Assert.Equal(text, document.Metadata.Text);
+    }
 }
