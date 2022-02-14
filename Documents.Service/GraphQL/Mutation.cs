@@ -37,14 +37,29 @@ public class Mutation
 
         return document;
     }
-    
+
     /// <summary>
     /// Deletes a document by its id
     /// </summary>
+    /// <param name="collection"></param>
     /// <param name="documentId">Id of the document to delete</param>
     /// <exception cref="NotImplementedException"></exception>
     /// <returns>Updated document</returns>
-    public Document DeleteDocument(Guid documentId) => throw new NotImplementedException();
+    [Error(typeof(DocumentNotFoundException))]
+    public void DeleteDocument([Service] IMongoCollection<Document> collection, Guid documentId)
+    {
+        var exists = collection
+            .Find(doc => doc.Id == documentId)
+            .Any();
+
+        if (!exists)
+        {
+            throw new DocumentNotFoundException(documentId);
+        }
+
+        collection.DeleteOne(doc => doc.Id == documentId);
+    }
+    
 
     /// <summary>
     /// Adds <paramref name="tags"/> to the document with the <paramref name="documentId"/>

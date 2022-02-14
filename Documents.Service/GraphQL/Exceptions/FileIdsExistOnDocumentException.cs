@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
 
 namespace Documents.Service.GraphQL.Exceptions;
 
@@ -10,6 +11,7 @@ public class FileIdsExistOnDocumentException : Exception
     {
     }
 
+    [ExcludeFromCodeCoverage]
     protected FileIdsExistOnDocumentException(SerializationInfo info, StreamingContext context) : base(info, context)
     {
     }

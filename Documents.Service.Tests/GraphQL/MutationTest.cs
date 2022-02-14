@@ -100,4 +100,54 @@ public class MutationTest
         Assert.NotNull(exception);
         Assert.IsType<FileIdsExistOnDocumentException>(exception);
     }
+    
+    [Fact]
+    public void DeleteDocument_Should_Throw_DocumentNotFoundException_On_Document_Not_Found()
+    {
+        // Arrange
+        var mutation = new Mutation();
+        var collectionMock = new Mock<IMongoCollection<Document>>();
+        collectionMock
+            .SetupReturnMock(collection => collection
+                .FindSync(
+                    It.IsAny<FilterDefinition<Document>>(),
+                    It.IsAny<FindOptions<Document>>(),
+                    It.IsAny<CancellationToken>()))
+            .SetupReturn(cursor => cursor.MoveNext(It.IsAny<CancellationToken>()), false);
+        
+        // Act 
+        var exception = Record.Exception(() => mutation.DeleteDocument(collectionMock.Object, Guid.NewGuid()));
+
+        // Assert
+        Assert.NotNull(exception);
+        Assert.IsType<DocumentNotFoundException>(exception);
+    }
+    
+    [Fact]
+    public void DeleteDocument_Should_Execute_Without_Errors()
+    {
+        // Arrange
+        var mutation = new Mutation();
+        var collectionMock = new Mock<IMongoCollection<Document>>();
+        collectionMock
+            .SetupReturnMock(collection => collection
+                .FindSync(
+                    It.IsAny<FilterDefinition<Document>>(),
+                    It.IsAny<FindOptions<Document>>(),
+                    It.IsAny<CancellationToken>()))
+            .SetupReturn(cursor => cursor.MoveNext(It.IsAny<CancellationToken>()), true)
+            .SetupReturn(cursor => cursor.Current, new Document[]
+            {
+                new()
+                {
+                    Id = Guid.NewGuid()
+                }
+            });
+        
+        // Act 
+        var exception = Record.Exception(() => mutation.DeleteDocument(collectionMock.Object, Guid.NewGuid()));
+
+        // Assert
+        Assert.Null(exception);
+    }
 }
