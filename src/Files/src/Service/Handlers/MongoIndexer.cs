@@ -29,4 +29,10 @@ public class MongoIndexer : IUploadIndexer
         await _mongoCollection.InsertOneAsync(uploadFile, cancellationToken: cancellationToken);
         return uploadFile;
     }
+
+    /// <inheritdoc />
+    public Task<UploadFile> GetAsync(Guid fileId) =>
+        _mongoCollection
+            .Find(file => file.Id == fileId)
+            .FirstOrDefaultAsync();
 }

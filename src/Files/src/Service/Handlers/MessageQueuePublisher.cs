@@ -25,10 +25,10 @@ internal class MessageQueuePublisher : IUploadPublisher
             ClientId = Dns.GetHostName()
         };
 
-        using var producer = new ProducerBuilder<Null, string>(producerConfig)
+        using var producer = new ProducerBuilder<Ignore, string>(producerConfig)
             .Build();
 
-        producer.Produce("fileUploaded", new Message<Null, string>
+        producer.Produce("fileUploaded", new Message<Ignore, string>
         {
             Value = uploadedFile.Id.ToString()
         });
