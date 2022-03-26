@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Files.Service.GraphQL;
 using Files.Service.Handlers;
@@ -18,8 +20,8 @@ public class QueryTest
         var query = new Query();
         var fileUrlProvider = new Mock<IFileUrlProvider>();
         fileUrlProvider
-            .SetupReturn(f => f.GetPreSignedDownloadUrl(It.IsAny<Guid>()),
-                Task.FromResult(new PreSignedUrl()));
+            .SetupReturn(f => f.GetPreSignedDownloadUrls(It.IsAny<Guid>()),
+                Task.FromResult(new List<PreSignedUrl>().AsEnumerable()));
 
         // Act
         var result = await query.GetDocumentDownloadUrl(fileUrlProvider.Object, Guid.NewGuid());
