@@ -1,4 +1,5 @@
-﻿using Files.Service.Configurations;
+﻿using System.Reactive.Linq;
+using Files.Service.Configurations;
 using Files.Service.Models;
 using Minio;
 
@@ -31,7 +32,7 @@ internal class FileUrlProvider : IFileUrlProvider
     }
 
     /// <inheritdoc />
-    public async Task<PreSignedUrl> GetPreSignedDownloadUrl(Guid documentId)
+    public async Task<IEnumerable<PreSignedUrl>> GetPreSignedDownloadUrls(Guid documentId)
     {
         var minioClient = GetMinioClient()
             .WithCredentials(
@@ -39,16 +40,27 @@ internal class FileUrlProvider : IFileUrlProvider
                 _fileServiceConfiguration.MinioSettings.Password)
             .WithEndpoint(_fileServiceConfiguration.MinioSettings.Endpoint)
             .Build();
-        var getPreSignedArgs = new PresignedGetObjectArgs()
-            .WithBucket(_fileServiceConfiguration.MinioSettings.UploadBucket)
-            .WithObject(documentId.ToString())
-            .WithExpiry((int) TimeSpan.FromDays(2).TotalSeconds);
 
-        var preSignedUrl = await minioClient.PresignedGetObjectAsync(getPreSignedArgs);
-        return new PreSignedUrl
-        {
-            Url = preSignedUrl
-        };
+        var listObjectsArgs = new ListObjectsArgs()
+            .WithBucket(documentId.ToString());
+
+        var files = await minioClient
+            .ListObjectsAsync(listObjectsArgs)
+            .ToList();
+        var urls = await Task.WhenAll(files
+            .Select(file => new PresignedGetObjectArgs()
+                .WithBucket(documentId.ToString())
+                .WithObject(file.Key)
+                .WithExpiry((int) TimeSpan.FromDays(2).TotalSeconds))
+            .Select(args => minioClient.PresignedGetObjectAsync(args))
+            .ToList());
+        
+        return urls
+            .Select(url => new PreSignedUrl
+            {
+                Url = url
+            })
+            .ToArray();
     }
 
     private MinioClient GetMinioClient() =>

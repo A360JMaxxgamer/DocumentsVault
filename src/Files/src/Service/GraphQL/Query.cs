@@ -5,8 +5,8 @@ namespace Files.Service.GraphQL;
 
 public class Query
 {
-    public Task<PreSignedUrl> GetDocumentDownloadUrl(
+    public Task<IEnumerable<PreSignedUrl>> GetDocumentDownloadUrl(
         [Service] IFileUrlProvider fileUrlProvider,
         Guid documentId) =>
-        fileUrlProvider.GetPreSignedDownloadUrl(documentId);
+        fileUrlProvider.GetPreSignedDownloadUrls(documentId);
 }
