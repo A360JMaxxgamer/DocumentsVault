@@ -15,7 +15,6 @@ public static class Program
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
-        builder.Services.AddGrpc();
         builder.Services.AddTransient<IFileUrlProvider, FileUrlProvider>();
         builder.Services.AddTransient<IFilePublisher, NatsFilePublisher>();
         builder.Services.BindConfiguration<FileServiceConfiguration>("FileService");

@@ -5,5 +5,5 @@
 /// </summary>
 public interface IFileAnalyzer
 {
-    Task AnalyzeFileAsync(string fileId, byte[] data);
+    Task AnalyzeFileAsync(Guid fileId, Stream data);
 }

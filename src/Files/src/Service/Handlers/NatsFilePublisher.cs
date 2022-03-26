@@ -38,8 +38,8 @@ internal class NatsFilePublisher : IFilePublisher
             .ToList();
         _logger.LogInformation("Found {Count} new documents", newDocuments.Count);
         
-        var natsConnection = new ConnectionFactory()
-            .CreateConnection(_fileServiceConfiguration.NatsEndpoint);
+        using var natsConnection = new ConnectionFactory()
+            .CreateConnection(_fileServiceConfiguration.Nats.Endpoint);
 
         foreach (var newDocument in newDocuments)
         {

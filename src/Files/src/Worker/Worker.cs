@@ -1,10 +1,8 @@
-using System.Net;
-using Confluent.Kafka;
-using Files.Grpc;
+using System.Text;
 using Files.Worker.Analysis;
 using Files.Worker.Configurations;
-using Grpc.Net.Client;
-using static Files.Grpc.DownloadService;
+using NATS.Client;
+using NATS.Client.Rx;
 
 namespace Files.Worker;
 
@@ -26,50 +24,36 @@ public class Worker : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        using var consumer = CreateConsumer();
-
+        using var natsConnection = new ConnectionFactory()
+            .CreateConnection(_filesWorkerConfiguration.Nats.Endpoint);
         while (!stoppingToken.IsCancellationRequested)
         {
             _logger.LogInformation("Worker running at: {UtcNow}", DateTimeOffset.UtcNow);
-            try
+            var messageStream = natsConnection
+                .SubscribeAsync("fileUpload")
+                .ToObservable()
+                .ToAsyncEnumerable()
+                .WithCancellation(stoppingToken);
+            await foreach (var fileUpload in messageStream)
             {
-                var consumeResult = consumer.Consume(stoppingToken);
-                var fileId = consumeResult.Message.Value;
-                await HandleFile(fileId);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, "Message consumption failed");
+                try
+                {
+                    var uploadedFile = Encoding.UTF8.GetString(fileUpload.Data);
+                    await using var dataStream = await new HttpClient().GetStreamAsync(new Uri(uploadedFile), stoppingToken);
+                    await HandleFile(dataStream);
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, "Message consumption failed");
+                }
             }
         }
     }
 
-    private async Task HandleFile(string fileId)
+    private async Task HandleFile(Stream dataStream)
     {
+        var fileId = Guid.NewGuid();
         _logger.LogInformation("Start analysis for {FileId}", fileId);
-
-        using var channel = GrpcChannel.ForAddress(_filesWorkerConfiguration.FileServiceGrpc);
-        var client = new DownloadServiceClient(channel);
-        var downloadResult = await client.DownloadDocumentAsync(new DocumentDownloadRequest
-        {
-            FileId = fileId
-        });
-        var bytes = downloadResult.Data.ToByteArray();
-        
-        _logger.LogInformation("Download of file finished ({Bytes} bytes received)", bytes.Length);
-        await _fileAnalyzer.AnalyzeFileAsync(fileId, bytes);
-    }
-
-    private IConsumer<Ignore, string> CreateConsumer()
-    {
-        var consumerConfig = new ConsumerConfig
-        {
-            BootstrapServers = _filesWorkerConfiguration.BootstrapServers,
-            ClientId = Dns.GetHostName()
-        };
-
-        var consumer = new ConsumerBuilder<Ignore, string>(consumerConfig)
-            .Build();
-        return consumer;
+        await _fileAnalyzer.AnalyzeFileAsync(fileId, dataStream);
     }
 }

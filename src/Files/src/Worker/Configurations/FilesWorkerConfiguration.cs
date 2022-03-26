@@ -1,8 +1,10 @@
-﻿namespace Files.Worker.Configurations;
+﻿using AspNetCore.Utilities.Configurations;
+
+namespace Files.Worker.Configurations;
 
 public record FilesWorkerConfiguration
 {
-    public string BootstrapServers { get; set; } = string.Empty;
+    public NatsSettings Nats { get; init; } = new();
 
     public string FileServiceGrpc { get; set; } = string.Empty;
 }

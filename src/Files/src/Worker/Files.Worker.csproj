@@ -9,12 +9,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Confluent.Kafka" Version="1.8.2" />
         <PackageReference Include="Grpc.Net.Client" Version="2.40.0" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
+        <PackageReference Include="NATS.Client" Version="0.14.5" />
+        <PackageReference Include="System.Interactive.Async" Version="6.0.1" />
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\Shared\src\AspNetCore.Utilities\AspNetCore.Utilities.csproj" />
       <ProjectReference Include="..\Grpc\Files.Grpc.csproj" />
     </ItemGroup>
 </Project>
