@@ -12,6 +12,7 @@
         <PackageReference Include="Grpc.Net.Client" Version="2.40.0" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
         <PackageReference Include="NATS.Client" Version="0.14.5" />
+        <PackageReference Include="PdfPig" Version="0.1.5" />
         <PackageReference Include="StrawberryShake.Transport.Http" Version="12.7.0" />
         <PackageReference Include="StrawberryShake.CodeGeneration.CSharp.Analyzers" Version="12.7.0" />
         <PackageReference Include="System.Interactive.Async" Version="6.0.1" />

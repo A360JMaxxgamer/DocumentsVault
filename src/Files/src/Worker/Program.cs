@@ -16,6 +16,7 @@ IHost host = Host.CreateDefaultBuilder(args)
                     .ApiGatewayEndpoint);
             });
         services.AddTransient<IFileAnalyzer, FileAnalyzer>();
+        services.AddTransient<IDocumentReader, PdfDocumentReader>();
         services.BindConfiguration<FilesWorkerConfiguration>("FileWorker");
     })
     .Build();

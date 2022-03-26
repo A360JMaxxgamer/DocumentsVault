@@ -1,4 +1,5 @@
-﻿using StrawberryShake;
+﻿using System.Text.RegularExpressions;
+using StrawberryShake;
 
 namespace Files.Worker.Analysis;
 
@@ -7,6 +8,7 @@ internal class FileAnalyzer : IFileAnalyzer
     private readonly IApiClient _apiClient;
     private readonly IEnumerable<IDocumentReader> _documentReaders;
     private readonly ILogger<FileAnalyzer> _logger;
+    private readonly Regex _extensionRegex = new Regex(@"^[^?]*", RegexOptions.Compiled);
 
     public FileAnalyzer(
         IApiClient apiClient,
@@ -54,6 +56,6 @@ internal class FileAnalyzer : IFileAnalyzer
     {
         var fileName = Path.GetFileName(fileUrl);
         var extension = Path.GetExtension(fileName);
-        return extension;
+        return _extensionRegex.Match(extension).Value;
     }
 }
