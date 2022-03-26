@@ -1,0 +1,7 @@
+﻿mutation AddDocument($input: AddDocumentInput!) {
+  addDocument(input: $input) {
+    document {
+      id
+    }
+  }
+}

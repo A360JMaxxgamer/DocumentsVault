@@ -6,5 +6,5 @@ public record FilesWorkerConfiguration
 {
     public NatsSettings Nats { get; init; } = new();
 
-    public string FileServiceGrpc { get; set; } = string.Empty;
+    public GraphQLSettings GraphQlSettings { get; init; } = new();
 }

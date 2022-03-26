@@ -5,5 +5,5 @@
 /// </summary>
 public interface IFileAnalyzer
 {
-    Task AnalyzeFileAsync(Guid fileId, Stream data);
+    Task AnalyzeFileAsync(string fileUrl, CancellationToken token);
 }

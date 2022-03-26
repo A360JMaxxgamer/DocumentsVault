@@ -39,8 +39,7 @@ public class Worker : BackgroundService
                 try
                 {
                     var uploadedFile = Encoding.UTF8.GetString(fileUpload.Data);
-                    await using var dataStream = await new HttpClient().GetStreamAsync(new Uri(uploadedFile), stoppingToken);
-                    await HandleFile(dataStream);
+                    await _fileAnalyzer.AnalyzeFileAsync(uploadedFile, stoppingToken);
                 }
                 catch (Exception e)
                 {
@@ -48,12 +47,5 @@ public class Worker : BackgroundService
                 }
             }
         }
-    }
-
-    private async Task HandleFile(Stream dataStream)
-    {
-        var fileId = Guid.NewGuid();
-        _logger.LogInformation("Start analysis for {FileId}", fileId);
-        await _fileAnalyzer.AnalyzeFileAsync(fileId, dataStream);
     }
 }

@@ -7,6 +7,14 @@ IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices(services =>
     {
         services.AddHostedService<Worker>();
+        services.AddApiClient()
+            .ConfigureHttpClient((sp, client) =>
+            {
+                client.BaseAddress = new Uri(sp
+                    .GetRequiredService<FilesWorkerConfiguration>()
+                    .GraphQlSettings
+                    .ApiGatewayEndpoint);
+            });
         services.AddTransient<IFileAnalyzer, FileAnalyzer>();
         services.BindConfiguration<FilesWorkerConfiguration>("FileWorker");
     })
