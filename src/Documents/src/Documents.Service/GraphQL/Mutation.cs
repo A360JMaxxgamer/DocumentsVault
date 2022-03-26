@@ -14,25 +14,15 @@ public class Mutation
     /// <param name="metadata">Metadata of document</param>
     /// <returns>Created document</returns>
     [Error(typeof(FileIdsExistOnDocumentException))]
-    public Document AddDocument([Service] IMongoCollection<Document> collection, List<Guid> fileIds, Metadata metadata)
+    public Document AddDocument([Service] IMongoCollection<Document> collection, Metadata metadata)
     {
-        var existingDocument = collection
-            .Find(doc => doc.FileIds.Any(fileIds.Contains))
-            .FirstOrDefault();
-
-        if (existingDocument is not null)
-        {
-            throw new FileIdsExistOnDocumentException(existingDocument.Id);
-        }
-        
         var creationDate = DateTime.UtcNow;
         var document = new Document
         {
             Id = Guid.NewGuid(),
             Metadata = metadata,
             CreationDate = creationDate,
-            ModificationDate = creationDate,
-            FileIds = fileIds
+            ModificationDate = creationDate
         };
 
         collection.InsertOne(document);

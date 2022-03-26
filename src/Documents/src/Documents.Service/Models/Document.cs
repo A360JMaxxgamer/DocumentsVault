@@ -27,9 +27,4 @@ public record Document
     /// Additional metadata of the document
     /// </summary>
     public Metadata Metadata { get; set; } = new();
-
-    /// <summary>
-    /// Ids of the files
-    /// </summary>
-    public List<Guid> FileIds { get; set; } = new();
 }
