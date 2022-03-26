@@ -1,3 +1,3 @@
 ﻿extend type Document {
-    fileUrl: [PreSignedUrl!]! @delegate(path: "DocumentDownloadUrl(documentId: $fields.Id)")
+    fileUrls: [PreSignedUrl!]! @delegate(path: "DocumentDownloadUrl(documentId: $fields.Id)")
 }
