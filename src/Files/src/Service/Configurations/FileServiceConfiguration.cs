@@ -2,9 +2,17 @@
 
 public record FileServiceConfiguration
 {
-    public string Folder { get; set; } = "./Upload";
+    public string NatsEndpoint { get; set; } = "http://localhost:4222";
 
-    public string BootstrapServers { get; set; } = string.Empty;
+    public MinioSettings MinioSettings { get; set; } = new();
+}
 
-    public string MongoConnectionString { get; set; } = string.Empty;
+public record MinioSettings
+{
+    public string Endpoint { get; set; } ="localhost:9000";
+    public string UploadBucket { get; set; } = "upload";
+
+    public string Username { get; set; } = "debug";
+
+    public string Password { get; set; } = "debug123";
 }

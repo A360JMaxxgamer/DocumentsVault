@@ -46,6 +46,8 @@ public class Worker : BackgroundService
 
     private async Task HandleFile(string fileId)
     {
+        _logger.LogInformation("Start analysis for {FileId}", fileId);
+
         using var channel = GrpcChannel.ForAddress(_filesWorkerConfiguration.FileServiceGrpc);
         var client = new DownloadServiceClient(channel);
         var downloadResult = await client.DownloadDocumentAsync(new DocumentDownloadRequest
@@ -53,6 +55,8 @@ public class Worker : BackgroundService
             FileId = fileId
         });
         var bytes = downloadResult.Data.ToByteArray();
+        
+        _logger.LogInformation("Download of file finished ({Bytes} bytes received)", bytes.Length);
         await _fileAnalyzer.AnalyzeFileAsync(fileId, bytes);
     }
 

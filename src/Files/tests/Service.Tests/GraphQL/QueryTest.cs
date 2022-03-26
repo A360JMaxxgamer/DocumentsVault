@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Files.Service.GraphQL;
+using Files.Service.Handlers;
 using Files.Service.Models;
-using MongoDB.Driver;
 using Moq;
+using UnitTestHelper.Extensions;
 using Xunit;
 
 namespace Files.Service.Tests.GraphQL;
@@ -10,28 +12,17 @@ namespace Files.Service.Tests.GraphQL;
 public class QueryTest
 {
     [Fact]
-    public void GetUploadFiles_Should_Return_Executable()
+    public async Task GetDocumentDownloadUrl_Should_Return_PreSignedUrl()
     {
         // Arrange
         var query = new Query();
-        var collectionMock = new Mock<IMongoCollection<UploadFile>>();
+        var fileUrlProvider = new Mock<IFileUrlProvider>();
+        fileUrlProvider
+            .SetupReturn(f => f.GetPreSignedDownloadUrl(It.IsAny<Guid>()),
+                Task.FromResult(new PreSignedUrl()));
 
         // Act
-        var result = query.GetUploadFiles(collectionMock.Object);
-
-        // Assert
-        Assert.NotNull(result);
-    }
-
-    [Fact]
-    public void GetUploadFilesByIdShould_Return_Executable()
-    {
-        // Arrange
-        var query = new Query();
-        var collectionMock = new Mock<IMongoCollection<UploadFile>>();
-
-        // Act
-        var result = query.GetUploadFileById(collectionMock.Object, Guid.NewGuid());
+        var result = await query.GetDocumentDownloadUrl(fileUrlProvider.Object, Guid.NewGuid());
 
         // Assert
         Assert.NotNull(result);

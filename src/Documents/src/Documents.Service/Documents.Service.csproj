@@ -10,9 +10,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="HotChocolate.AspNetCore" Version="12.6.0" />
-        <PackageReference Include="HotChocolate.Data.MongoDb" Version="12.6.0" />
-        <PackageReference Include="HotChocolate.Stitching.Redis" Version="12.6.0" />
+        <PackageReference Include="HotChocolate.AspNetCore" Version="12.7.0" />
+        <PackageReference Include="HotChocolate.Data.MongoDb" Version="12.7.0" />
+        <PackageReference Include="HotChocolate.Stitching.Redis" Version="12.7.0" />
         <PackageReference Include="MongoDB.Driver.GridFS" Version="2.14.1" />
     </ItemGroup>
 
