@@ -17,13 +17,21 @@ internal class FileUrlProvider : IFileUrlProvider
     /// <inheritdoc />
     public async Task<PreSignedUrl> CreatePreSignedUploadUrl(string fileName)
     {
+        var client = GetMinioClient();
+
+        if (!await client.BucketExistsAsync(new BucketExistsArgs()
+                .WithBucket(_fileServiceConfiguration.MinioSettings.UploadBucket)))
+        {
+            await client.MakeBucketAsync(new MakeBucketArgs()
+                .WithBucket(_fileServiceConfiguration.MinioSettings.UploadBucket));
+        }
+        
         var uploadArgs = new PresignedPutObjectArgs()
             .WithBucket(_fileServiceConfiguration.MinioSettings.UploadBucket)
             .WithObject(fileName)
             .WithExpiry((int) TimeSpan.FromHours(2).TotalSeconds);
 
-        var preSignedUrl = await GetMinioClient()
-            .PresignedPutObjectAsync(uploadArgs);
+        var preSignedUrl = await client.PresignedPutObjectAsync(uploadArgs);
 
         return new PreSignedUrl
         {

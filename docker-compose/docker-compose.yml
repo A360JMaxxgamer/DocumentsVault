@@ -35,7 +35,6 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=maxxgamer
       - MONGO_INITDB_ROOT_PASSWORD=panchuck
-      - MONGO_INITDB_DATABASE=admin
     
   nats:
     image: nats:2.7.4
