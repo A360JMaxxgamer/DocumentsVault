@@ -20,7 +20,7 @@ public static class Program
         builder.Services.BindConfiguration<FileServiceConfiguration>("FileService");
 
         builder.Services
-            .AddSingleton(provider => ConnectionMultiplexer.Connect(provider.GetRequiredService<IConfiguration>().GetValue<string>("redis")))
+            .AddSingleton(provider => ConnectionMultiplexer.Connect(provider.GetRequiredService<FileServiceConfiguration>().Redis.Host))
             .AddGraphQLServer()
             .AddQueryType<Query>()
             .AddMutationType<Mutation>()

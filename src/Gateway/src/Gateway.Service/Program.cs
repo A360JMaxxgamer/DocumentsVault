@@ -10,9 +10,10 @@ public static class Program
 
         AddFederatedSchemaClient(builder.Services, "files");
         AddFederatedSchemaClient(builder.Services, "documents");
-        
+
         builder.Services
-            .AddSingleton(provider => ConnectionMultiplexer.Connect(provider.GetRequiredService<IConfiguration>().GetValue<string>("redis")))
+            .AddSingleton(provider =>
+                ConnectionMultiplexer.Connect(provider.GetRequiredService<IConfiguration>().GetValue<string>("redis")))
             .AddGraphQLServer()
             .AddRemoteSchemasFromRedis("documentsVault", sp => sp.GetRequiredService<ConnectionMultiplexer>());
         

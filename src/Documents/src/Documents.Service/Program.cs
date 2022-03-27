@@ -26,7 +26,7 @@ public static class Program
         });
 
         builder.Services
-            .AddSingleton(provider => ConnectionMultiplexer.Connect(provider.GetRequiredService<IConfiguration>().GetValue<string>("redis")))
+            .AddSingleton(provider => ConnectionMultiplexer.Connect(provider.GetRequiredService<DocumentServiceConfiguration>().Redis.Host))
             .AddGraphQLServer()
             .AddMutationConventions()
             .AddQueryType<Query>()

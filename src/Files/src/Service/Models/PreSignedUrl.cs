@@ -2,5 +2,5 @@
 
 public record PreSignedUrl
 {
-    public string Url { get; set; } = string.Empty;
+    public string Url { get; init; } = string.Empty;
 }

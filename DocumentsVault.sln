@@ -19,7 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCore.Utilities.Tests"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker-compose", "src\docker-compose", "{D8541A60-1EE5-47B1-B01F-47AF629E216C}"
 	ProjectSection(SolutionItems) = preProject
-		docker-compose.dev.yml = docker-compose.dev.yml
+		docker-compose\docker-compose.yml = docker-compose\docker-compose.yml
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Documents.Service", "src\Documents\src\Documents.Service\Documents.Service.csproj", "{B80D8C3D-9F37-4356-8FD0-ED1713E3A001}"
