@@ -1,0 +1,13 @@
+{
+  "schema": "schema.graphql",
+  "documents": "**/*.graphql",
+  "extensions": {
+    "strawberryShake": {
+      "name": "ApiClient",
+      "namespace": "Files.Worker",
+      "url": "https://localhost:7267/graphql",
+      "dependencyInjection": true,
+      "emitGeneratedCode": false
+    }
+  }
+}

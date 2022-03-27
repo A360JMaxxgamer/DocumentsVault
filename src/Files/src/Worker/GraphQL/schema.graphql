@@ -1,0 +1,305 @@
+﻿schema {
+  query: Query
+  mutation: Mutation
+}
+
+type Query {
+  documentDownloadUrl(documentId: UUID!): [PreSignedUrl!]!
+  "Get a document by its id"
+  documentById(id: UUID!): Document
+  "Get a list of documents based on paging, filter and sorting options"
+  documents("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String order: [DocumentSortInput!] where: DocumentFilterInput): DocumentsConnection
+}
+
+type Mutation {
+  createPreSignedUploadUrl(input: CreatePreSignedUploadUrlInput!): CreatePreSignedUploadUrlPayload!
+  triggerUploadedFilesIndexing: TriggerUploadedFilesIndexingPayload!
+  "Adds a new document\n\n\n**Returns:**\nCreated document"
+  addDocument(input: AddDocumentInput!): AddDocumentPayload!
+  "Adds  to the document with the \n\n\n**Returns:**\nUpdated document"
+  addTags(input: AddTagsInput!): AddTagsPayload!
+  "Deletes  off the document with the \n\n\n**Returns:**\nUpdated document"
+  deleteTags(input: DeleteTagsInput!): DeleteTagsPayload!
+  "Updates the title of the document\n\n\n**Returns:**\nUpdated document"
+  updateDocumentTitle(input: UpdateDocumentTitleInput!): UpdateDocumentTitlePayload!
+  "Updates the text of the document\n\n\n**Returns:**\nUpdated document"
+  updateDocumentText(input: UpdateDocumentTextInput!): UpdateDocumentTextPayload!
+}
+
+type CreatePreSignedUploadUrlPayload {
+  preSignedUrl: PreSignedUrl
+}
+
+type PreSignedUrl {
+  url: String!
+}
+
+type TriggerUploadedFilesIndexingPayload {
+  triggerDate: DateTime
+}
+
+input CreatePreSignedUploadUrlInput {
+  fileName: String!
+}
+
+interface Error {
+  message: String!
+}
+
+type AddDocumentPayload {
+  document: Document
+  errors: [AddDocumentError!]
+}
+
+type AddTagsPayload {
+  document: Document
+  errors: [AddTagsError!]
+}
+
+type DeleteTagsPayload {
+  document: Document
+  errors: [DeleteTagsError!]
+}
+
+"Document which contains various information e.g. a letter or"
+type Document {
+  "Id of the document"
+  id: UUID!
+  "Date the document was initially created"
+  creationDate: DateTime!
+  "Date the document was modified last"
+  modificationDate: DateTime!
+  "Additional metadata of the document"
+  metadata: Metadata!
+  fileUrls: [PreSignedUrl!]!
+}
+
+type DocumentNotFoundError implements Error {
+  message: String!
+}
+
+"A connection to a list of items."
+type DocumentsConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [DocumentsEdge!]
+  "A flattened list of the nodes."
+  nodes: [Document!]
+}
+
+"An edge in a connection."
+type DocumentsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: Document!
+}
+
+type FileIdsExistOnDocumentError implements Error {
+  message: String!
+}
+
+"Container for metadata of a document"
+type Metadata {
+  "Title of the document"
+  title: String!
+  "A list of custom tags"
+  tags: [String!]!
+  "Text of the document"
+  text: String!
+}
+
+"Information about pagination in a connection."
+type PageInfo {
+  "Indicates whether more edges exist following the set defined by the clients arguments."
+  hasNextPage: Boolean!
+  "Indicates whether more edges exist prior the set defined by the clients arguments."
+  hasPreviousPage: Boolean!
+  "When paginating backwards, the cursor to continue."
+  startCursor: String
+  "When paginating forwards, the cursor to continue."
+  endCursor: String
+}
+
+type UpdateDocumentTextPayload {
+  document: Document
+  errors: [UpdateDocumentTextError!]
+}
+
+type UpdateDocumentTitlePayload {
+  document: Document
+  errors: [UpdateDocumentTitleError!]
+}
+
+union AddDocumentError = FileIdsExistOnDocumentError
+
+union AddTagsError = DocumentNotFoundError
+
+union DeleteTagsError = DocumentNotFoundError
+
+union UpdateDocumentTextError = DocumentNotFoundError
+
+union UpdateDocumentTitleError = DocumentNotFoundError
+
+input AddDocumentInput {
+  "Metadata of document"
+  metadata: MetadataInput!
+}
+
+input AddTagsInput {
+  "Id of the document"
+  documentId: UUID!
+  "Tags to add"
+  tags: [String!]!
+}
+
+input ComparableDateTimeOperationFilterInput {
+  eq: DateTime
+  neq: DateTime
+  in: [DateTime!]
+  nin: [DateTime!]
+  gt: DateTime
+  ngt: DateTime
+  gte: DateTime
+  ngte: DateTime
+  lt: DateTime
+  nlt: DateTime
+  lte: DateTime
+  nlte: DateTime
+}
+
+input ComparableGuidOperationFilterInput {
+  eq: UUID
+  neq: UUID
+  in: [UUID!]
+  nin: [UUID!]
+  gt: UUID
+  ngt: UUID
+  gte: UUID
+  ngte: UUID
+  lt: UUID
+  nlt: UUID
+  lte: UUID
+  nlte: UUID
+}
+
+input DeleteTagsInput {
+  "Id of the document"
+  documentId: UUID!
+  "Tags to delete"
+  tags: [String!]!
+}
+
+"Document which contains various information e.g. a letter or"
+input DocumentFilterInput {
+  and: [DocumentFilterInput!]
+  or: [DocumentFilterInput!]
+  "Id of the document"
+  id: ComparableGuidOperationFilterInput
+  "Date the document was initially created"
+  creationDate: ComparableDateTimeOperationFilterInput
+  "Date the document was modified last"
+  modificationDate: ComparableDateTimeOperationFilterInput
+  "Additional metadata of the document"
+  metadata: MetadataFilterInput
+}
+
+"Document which contains various information e.g. a letter or"
+input DocumentSortInput {
+  "Id of the document"
+  id: SortEnumType
+  "Date the document was initially created"
+  creationDate: SortEnumType
+  "Date the document was modified last"
+  modificationDate: SortEnumType
+  "Additional metadata of the document"
+  metadata: MetadataSortInput
+}
+
+input ListStringOperationFilterInput {
+  all: StringOperationFilterInput
+  none: StringOperationFilterInput
+  some: StringOperationFilterInput
+  any: Boolean
+}
+
+"Container for metadata of a document"
+input MetadataFilterInput {
+  and: [MetadataFilterInput!]
+  or: [MetadataFilterInput!]
+  "Title of the document"
+  title: StringOperationFilterInput
+  "A list of custom tags"
+  tags: ListStringOperationFilterInput
+  "Text of the document"
+  text: StringOperationFilterInput
+}
+
+"Container for metadata of a document"
+input MetadataInput {
+  "Title of the document"
+  title: String!
+  "A list of custom tags"
+  tags: [String!]!
+  "Text of the document"
+  text: String!
+}
+
+"Container for metadata of a document"
+input MetadataSortInput {
+  "Title of the document"
+  title: SortEnumType
+  "Text of the document"
+  text: SortEnumType
+}
+
+input StringOperationFilterInput {
+  and: [StringOperationFilterInput!]
+  or: [StringOperationFilterInput!]
+  eq: String
+  neq: String
+  contains: String
+  ncontains: String
+  in: [String]
+  nin: [String]
+  startsWith: String
+  nstartsWith: String
+  endsWith: String
+  nendsWith: String
+}
+
+input UpdateDocumentTextInput {
+  "Id of the document"
+  documentId: UUID!
+  "New text"
+  text: String!
+}
+
+input UpdateDocumentTitleInput {
+  "Id of the document"
+  documentId: UUID!
+  "New title"
+  title: String!
+}
+
+enum SortEnumType {
+  ASC
+  DESC
+}
+
+"The name scalar represents a valid GraphQL name as specified in the spec and can be used to refer to fields or types."
+scalar Name
+
+scalar UUID
+
+"The `DateTime` scalar represents an ISO-8601 compliant date time type."
+scalar DateTime
+
+"Delegates a resolver to a remote schema."
+directive @delegate("The path to the field on the remote schema." path: String "The name of the schema to which this field shall be delegated to." schema: Name!) on FIELD_DEFINITION
+
+directive @computed("Specifies the fields on which a computed field is dependent on." dependantOn: [Name!]) on FIELD_DEFINITION
+
+"Annotates the original name of a type."
+directive @source("The original name of the annotated type." name: Name! "The name of the schema to which this type belongs to." schema: Name!) repeatable on ENUM | OBJECT | INTERFACE | UNION | INPUT_OBJECT | FIELD_DEFINITION | INPUT_FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM_VALUE

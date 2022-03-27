@@ -1,0 +1,59 @@
+version: "3.9"
+
+services:
+  redis:
+    image: redis:6.2-alpine
+    restart: always
+    expose:
+      - 6379
+    ports:
+      - '7000:6379'
+    command: redis-server --save 20 1 --loglevel warning
+    volumes:
+      - redis-data:/data
+    
+  minio:
+    image: minio/minio:RELEASE.2022-03-26T06-49-28Z.fips
+    restart: always
+    ports:
+      - '9000:9000'
+    environment:
+      - MINIO_ACCESS_KEY=debug
+      - MINIO_SECRET_KEY=debug123
+    volumes:
+      - minio-data:/data
+      - minio-config:/root/.minio
+    command: server /data
+  
+  mongo:
+    image: mongo:5.0.6
+    restart: always
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=maxxgamer
+      - MONGO_INITDB_ROOT_PASSWORD=panchuck
+      - MONGO_INITDB_DATABASE=admin
+    
+  nats:
+    image: nats:2.7.4
+    restart: always
+    ports:
+      - '4222:4222'
+      - '8222:6222'
+    volumes:
+      - nats-data:/data
+  
+volumes:
+  redis-data:
+    driver: local
+  minio-data:
+    driver: local
+  minio-config:
+    driver: local
+  mongo-data:
+    driver: local
+  nats-data:
+    driver: local
