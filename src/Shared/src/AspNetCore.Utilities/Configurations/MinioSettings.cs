@@ -4,6 +4,8 @@ public record MinioSettings
 {
     public string Endpoint { get; set; } ="localhost:9000";
     public string UploadBucket { get; set; } = "upload";
+    
+    public string IndexBucket { get; init; } = "index";
 
     public string Username { get; set; } = "debug";
 

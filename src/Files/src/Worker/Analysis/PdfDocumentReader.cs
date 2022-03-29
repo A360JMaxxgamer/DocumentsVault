@@ -6,10 +6,10 @@ namespace Files.Worker.Analysis;
 internal class PdfDocumentReader : IDocumentReader
 {
     /// <inheritdoc />
-    public string[] SupportedFileExtensions => new[] { ".pdf" };
+    public string[] SupportedContentTypes => new[] { "application/pdf" };
 
     /// <inheritdoc />
-    public Task<AddDocumentInput> ReadDocumentAsync(Stream data, CancellationToken token)
+    public Task<string> ReadDocumentAsync(Stream data, CancellationToken token)
     {
         using var memoryStream = new MemoryStream();
         data.CopyTo(memoryStream);
@@ -27,16 +27,8 @@ internal class PdfDocumentReader : IDocumentReader
         {
             sb.AppendLine(pageContent);
         }
-        
-        var addDocumentInput = new AddDocumentInput
-        {
-            Metadata = new MetadataInput
-            {
-                Title = string.Empty,
-                Tags = new List<string>(),
-                Text = sb.ToString()
-            }
-        };
-        return Task.FromResult(addDocumentInput);
+
+
+        return Task.FromResult(sb.ToString());
     }
 }

@@ -13,17 +13,22 @@ services:
       - redis-data:/data
     
   minio:
-    image: minio/minio:RELEASE.2022-03-26T06-49-28Z.fips
+    image: quay.io/minio/minio
     restart: always
     ports:
       - '9000:9000'
+      - '9001:9001'
     environment:
       - MINIO_ACCESS_KEY=debug
       - MINIO_SECRET_KEY=debug123
+      - MINIO_NOTIFY_NATS_ADDRESS_FILES="nats:4222"
+      - MINIO_NOTIFY_NATS_SUBJECT_FILES="fileUpload"
+      - MINIO_NOTIFY_NATS_STREAMING_FILES="on"
+      - MINIO_NOTIFY_NATS_STREAMING_ASYNC_FILES="on"
     volumes:
       - minio-data:/data
       - minio-config:/root/.minio
-    command: server /data
+    command: server /data --console-address ":9001"
   
   mongo:
     image: mongo:5.0.6

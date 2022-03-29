@@ -2,7 +2,7 @@
 
 public interface IDocumentReader
 {
-    string[] SupportedFileExtensions { get; }
+    string[] SupportedContentTypes { get; }
     
-    Task<AddDocumentInput> ReadDocumentAsync(Stream data, CancellationToken token);
+    Task<string> ReadDocumentAsync(Stream data, CancellationToken token);
 }

@@ -15,28 +15,34 @@ internal class FileUrlProvider : IFileUrlProvider
     }
 
     /// <inheritdoc />
-    public async Task<PreSignedUrl> CreatePreSignedUploadUrl(string fileName)
+    public async Task<List<PreSignedUrl>> CreatePreSignedUploadUrls(string[] fileNames)
     {
         var client = GetMinioClient();
-
-        if (!await client.BucketExistsAsync(new BucketExistsArgs()
-                .WithBucket(_fileServiceConfiguration.MinioSettings.UploadBucket)))
+        var preSignedUrls = new List<PreSignedUrl>();
+        var uploadId = Guid.NewGuid();
+        var bucketName = _fileServiceConfiguration.MinioSettings.UploadBucket;
+        if (! await client.BucketExistsAsync(new BucketExistsArgs().WithBucket(bucketName)))
         {
-            await client.MakeBucketAsync(new MakeBucketArgs()
-                .WithBucket(_fileServiceConfiguration.MinioSettings.UploadBucket));
+            await client.MakeBucketAsync(new MakeBucketArgs().WithBucket(bucketName));
         }
-        
-        var uploadArgs = new PresignedPutObjectArgs()
-            .WithBucket(_fileServiceConfiguration.MinioSettings.UploadBucket)
-            .WithObject(fileName)
-            .WithExpiry((int) TimeSpan.FromHours(2).TotalSeconds);
 
-        var preSignedUrl = await client.PresignedPutObjectAsync(uploadArgs);
 
-        return new PreSignedUrl
+        foreach (var fileName in fileNames)
         {
-            Url = preSignedUrl
-        };
+            var uploadPath = uploadId + "/" + fileName;
+            var args = new PresignedPutObjectArgs()
+                .WithBucket(bucketName)
+                .WithObject(uploadPath)
+                .WithExpiry((int) TimeSpan.FromHours(2).TotalSeconds);
+            var preSignedUrl = await client.PresignedPutObjectAsync(args);
+            preSignedUrls.Add(new PreSignedUrl
+            {
+                FileName = fileName,
+                Url = preSignedUrl
+            });
+        }
+
+        return preSignedUrls;
     }
 
     /// <inheritdoc />

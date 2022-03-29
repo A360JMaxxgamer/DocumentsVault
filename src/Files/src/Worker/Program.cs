@@ -2,6 +2,7 @@ using AspNetCore.Utilities.Configurations;
 using Files.Worker;
 using Files.Worker.Analysis;
 using Files.Worker.Configurations;
+using Minio;
 
 IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices(services =>
@@ -15,8 +16,16 @@ IHost host = Host.CreateDefaultBuilder(args)
                     .GraphQlSettings
                     .ApiGatewayEndpoint);
             });
-        services.AddTransient<IFileAnalyzer, FileAnalyzer>();
+        services.AddTransient<IDocumentAnalyzer, DocumentAnalyzer>();
         services.AddTransient<IDocumentReader, PdfDocumentReader>();
+        services.AddTransient<IMinioClient>(sp =>
+        {
+            var config = sp.GetRequiredService<FilesWorkerConfiguration>();
+            var mongoClient = new MinioClient()
+                .WithEndpoint(config.Minio.Endpoint)
+                .WithCredentials(config.Minio.Username, config.Minio.Password);
+            return mongoClient;
+        });
         services.BindConfiguration<FilesWorkerConfiguration>("FileWorker");
     })
     .Build();

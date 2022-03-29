@@ -5,13 +5,6 @@ namespace Files.Service.GraphQL;
 
 public class Mutation
 {
-    public Task<PreSignedUrl> CreatePreSignedUploadUrl([Service] IFileUrlProvider fileUrlProvider, string fileName) =>
-        fileUrlProvider.CreatePreSignedUploadUrl(fileName);
-    
-    [UseMutationConvention(PayloadFieldName = "triggerDate")]
-    public async Task<DateTime> TriggerUploadedFilesIndexing([Service] IFilePublisher filePublisher)
-    {
-        await filePublisher.PublishUploadAsync();
-        return DateTime.UtcNow;
-    }
+    public Task<List<PreSignedUrl>> CreatePreSignedUploadUrl([Service] IFileUrlProvider fileUrlProvider, string[] filenames) =>
+        fileUrlProvider.CreatePreSignedUploadUrls(filenames);
 }

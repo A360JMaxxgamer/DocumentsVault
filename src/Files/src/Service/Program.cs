@@ -16,7 +16,6 @@ public static class Program
 
         // Add services to the container.
         builder.Services.AddTransient<IFileUrlProvider, FileUrlProvider>();
-        builder.Services.AddTransient<IFilePublisher, NatsFilePublisher>();
         builder.Services.BindConfiguration<FileServiceConfiguration>("FileService");
 
         builder.Services

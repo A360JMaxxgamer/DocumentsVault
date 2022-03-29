@@ -43,14 +43,11 @@ public class MutationTest
             .SetupReturn(cursor => cursor.MoveNext(It.IsAny<CancellationToken>()), false);
         
         // Act 
-        var document = mutation.AddDocument(collectionMock.Object, fileIds, metadata);
+        var document = mutation.AddDocument(collectionMock.Object, metadata);
 
         // Assert
         Assert.NotEqual(Guid.Empty, document.Id);
         Assert.Equal(document.CreationDate, document.ModificationDate);
-        
-        Assert.Equal(fileIds[0], document.FileIds[0]);
-        Assert.Equal(fileIds[1], document.FileIds[1]);
         
         Assert.Equal(metadata.Title, document.Metadata.Title);
         Assert.Equal(metadata.Text, document.Metadata.Text);
@@ -94,7 +91,7 @@ public class MutationTest
             });
         
         // Act 
-        var exception = Record.Exception(() => mutation.AddDocument(collectionMock.Object, fileIds, metadata));
+        var exception = Record.Exception(() => mutation.AddDocument(collectionMock.Object, metadata));
 
         // Assert
         Assert.NotNull(exception);
