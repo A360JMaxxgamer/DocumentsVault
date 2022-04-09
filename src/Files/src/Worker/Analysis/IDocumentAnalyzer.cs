@@ -7,5 +7,5 @@ namespace Files.Worker.Analysis;
 /// </summary>
 public interface IDocumentAnalyzer
 {
-    Task AnalyzeDocumentAsync(MinioMessage uploadedDocumentMessage, CancellationToken token);
+    Task AnalyzeDocumentAsync(MinioMessage minioMessage, CancellationToken token);
 }

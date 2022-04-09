@@ -19,6 +19,5 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\Shared\src\AspNetCore.Utilities\AspNetCore.Utilities.csproj" />
-      <ProjectReference Include="..\..\..\Shared\src\Messages\Messages.csproj" />
     </ItemGroup>
 </Project>

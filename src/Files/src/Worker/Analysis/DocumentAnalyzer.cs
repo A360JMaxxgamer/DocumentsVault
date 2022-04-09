@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Web;
 using Files.Worker.Configurations;
 using Files.Worker.Models;
 using Minio;
@@ -29,11 +30,11 @@ internal class DocumentAnalyzer : IDocumentAnalyzer
     }
     
     /// <inheritdoc />
-    public async Task AnalyzeDocumentAsync(MinioMessage uploadedDocumentMessage, CancellationToken token)
+    public async Task AnalyzeDocumentAsync(MinioMessage minioMessage, CancellationToken token)
     {
-        var text = await ReadDocumentTextAsync(uploadedDocumentMessage, token);
-        await SaveDocumentAsync(text, token);
-        await CleanupUploadFolderAsync(uploadedDocumentMessage, token);
+        var text = await ReadDocumentTextAsync(minioMessage, token);
+        await SaveDocumentAsync(GetObjectKey(minioMessage.Records[0]) ,text, token);
+        await CleanupUploadFolderAsync(minioMessage, token);
     }
 
     private async Task CleanupUploadFolderAsync(
@@ -53,24 +54,26 @@ internal class DocumentAnalyzer : IDocumentAnalyzer
             await _minioClient.CopyObjectAsync(new CopyObjectArgs()
                 .WithCopyObjectSource(new CopySourceObjectArgs()
                     .WithBucket(minioRecord.Container.Bucket.Name)
-                    .WithObject(minioRecord.Container.Object.Key))
+                    .WithObject(GetObjectKey(minioRecord)))
                 .WithBucket(_filesWorkerConfiguration.Minio.IndexBucket), token);
 
             _logger.LogInformation("Removing file {File}",  minioRecord.Container.Object.Key);
             await _minioClient.RemoveObjectAsync(new RemoveObjectArgs()
                 .WithBucket(minioRecord.Container.Bucket.Name)
-                .WithObject(minioRecord.Container.Object.Key)
+                .WithObject(GetObjectKey(minioRecord))
                 .WithBypassGovernanceMode(true), token);
         }
     }
 
-    private async Task SaveDocumentAsync(string text, CancellationToken token)
+    private async Task SaveDocumentAsync(string title, string text, CancellationToken token)
     {
         var documentInput = new AddDocumentInput
         {
             Metadata = new MetadataInput
             {
-                Text = text
+                Title = title,
+                Text = text,
+                Tags = new List<string>()
             }
         };
 
@@ -105,7 +108,7 @@ internal class DocumentAnalyzer : IDocumentAnalyzer
 
             var url = await _minioClient.PresignedGetObjectAsync(new PresignedGetObjectArgs()
                 .WithBucket(minioRecord.Container.Bucket.Name)
-                .WithObject(minioRecord.Container.Object.Key)
+                .WithObject(GetObjectKey(minioRecord))
                 .WithExpiry((int)TimeSpan.FromHours(2).TotalSeconds));
             var dataStream = await new HttpClient().GetStreamAsync(new Uri(url), token);
             _logger.LogInformation(
@@ -117,6 +120,8 @@ internal class DocumentAnalyzer : IDocumentAnalyzer
         var text = sb.ToString();
         return text;
     }
+
+    private string GetObjectKey(MinioRecord minioRecord) => HttpUtility.UrlDecode(minioRecord.Container.Object.Key);
 
     private bool TryGetDocumentReader(MinioRecord minioRecord, out IDocumentReader? documentReader)
     {
