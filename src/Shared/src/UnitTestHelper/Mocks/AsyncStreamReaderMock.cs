@@ -1,21 +1,22 @@
-﻿using Grpc.Core;
+﻿using System.Diagnostics.CodeAnalysis;
+using Grpc.Core;
 
-namespace UnitTestHelper.Mocks
+namespace UnitTestHelper.Mocks;
+
+[ExcludeFromCodeCoverage]
+public class AsyncStreamReaderMock<T> : IAsyncStreamReader<T>
 {
-    public class AsyncStreamReaderMock<T> : IAsyncStreamReader<T>
+    private readonly IEnumerator<T> _valuesEnumerator;
+
+    /// <inheritdoc />
+    public T Current => _valuesEnumerator.Current;
+
+    public AsyncStreamReaderMock(IEnumerable<T> values)
     {
-        private readonly IEnumerator<T> _valuesEnumerator;
-
-        /// <inheritdoc />
-        public T Current => _valuesEnumerator.Current;
-
-        public AsyncStreamReaderMock(IEnumerable<T> values)
-        {
-            _valuesEnumerator = values.GetEnumerator();
-        }
-
-        /// <inheritdoc />
-        public Task<bool> MoveNext(CancellationToken cancellationToken) =>
-            Task.FromResult(_valuesEnumerator.MoveNext());
+        _valuesEnumerator = values.GetEnumerator();
     }
+
+    /// <inheritdoc />
+    public Task<bool> MoveNext(CancellationToken cancellationToken) =>
+        Task.FromResult(_valuesEnumerator.MoveNext());
 }

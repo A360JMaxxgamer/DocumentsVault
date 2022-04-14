@@ -1,5 +1,8 @@
-﻿namespace AspNetCore.Utilities.Configurations;
+﻿using System.Diagnostics.CodeAnalysis;
 
+namespace AspNetCore.Utilities.Configurations;
+
+[ExcludeFromCodeCoverage]
 public record MinioSettings
 {
     public string Endpoint { get; set; } ="localhost:9000";
