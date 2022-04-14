@@ -53,51 +53,7 @@ public class MutationTest
         Assert.Equal(metadata.Text, document.Metadata.Text);
         Assert.NotEmpty(metadata.Tags);
     }
-    
-    [Fact]
-    public void AddDocument_Should_Throw_FileIdsExistOnDocumentException_On_Duplication()
-    {
-        // Arrange
-        var mutation = new Mutation();
-        var fileIds = new List<Guid>
-        {
-            Guid.NewGuid(),
-            Guid.NewGuid()
-        };
-        var metadata = new Metadata
-        {
-            Tags = new List<string>
-            {
-                "Unittest",
-                "CodeCoverage"
-            },
-            Text = "...",
-            Title = "Title"
-        };
-        var collectionMock = new Mock<IMongoCollection<Document>>();
-        collectionMock
-            .SetupReturnMock(collection => collection
-                .FindSync(
-                    It.IsAny<FilterDefinition<Document>>(),
-                    It.IsAny<FindOptions<Document>>(),
-                    It.IsAny<CancellationToken>()))
-            .SetupReturn(cursor => cursor.MoveNext(It.IsAny<CancellationToken>()), true)
-            .SetupReturn(cursor => cursor.Current, new Document[]
-            {
-                new()
-                {
-                    Id = Guid.NewGuid()
-                }
-            });
-        
-        // Act 
-        var exception = Record.Exception(() => mutation.AddDocument(collectionMock.Object, metadata));
 
-        // Assert
-        Assert.NotNull(exception);
-        Assert.IsType<FileIdsExistOnDocumentException>(exception);
-    }
-    
     [Fact]
     public void DeleteDocument_Should_Throw_DocumentNotFoundException_On_Document_Not_Found()
     {

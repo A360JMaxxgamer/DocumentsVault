@@ -26,7 +26,6 @@ internal class FileUrlProvider : IFileUrlProvider
             await client.MakeBucketAsync(new MakeBucketArgs().WithBucket(bucketName));
         }
 
-
         foreach (var fileName in fileNames)
         {
             var uploadPath = uploadId + "/" + fileName;
