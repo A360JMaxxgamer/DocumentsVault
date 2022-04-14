@@ -1,10 +1,12 @@
-﻿using System.Reactive.Linq;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Reactive.Linq;
 using Files.Service.Configurations;
 using Files.Service.Models;
 using Minio;
 
 namespace Files.Service.Handlers;
 
+[ExcludeFromCodeCoverage(Justification = "Most of the code uses Minio SDk which offers no interface for the client")]
 internal class FileUrlProvider : IFileUrlProvider
 {
     private readonly FileServiceConfiguration _fileServiceConfiguration;
